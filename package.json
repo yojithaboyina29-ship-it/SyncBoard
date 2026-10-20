@@ -1,0 +1,17 @@
+{
+  "name": "syncboard",
+  "version": "1.0.0",
+  "description": "SyncBoard - Real-time collaborative project board with WebSockets, RBAC, and fractional indexing",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix server && npm run build --prefix client",
+    "start": "node server/dist/index.js",
+    "test": "npm run test --prefix server",
+    "db:push": "npm run db:push --prefix server",
+    "db:studio": "npm run db:studio --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
