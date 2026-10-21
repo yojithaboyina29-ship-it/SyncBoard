@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Server (Node / TSX)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/server",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "src/index.ts"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "envFile": "${workspaceFolder}/server/.env",
+      "restart": true
+    },
+    {
+      "name": "Launch Client (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/client/src"
+    },
+    {
+      "name": "Launch Client (Edge)",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/client/src"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": [],
+      "label": "npm: dev (Full Stack)",
+      "detail": "Starts both backend server (5000) and frontend client (3000) concurrently",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "isBackground": true
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "server",
+      "problemMatcher": [],
+      "label": "npm: dev (Server only)",
+      "detail": "Starts Express + Socket.IO server on port 5000",
+      "isBackground": true
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "client",
+      "problemMatcher": [],
+      "label": "npm: dev (Client only)",
+      "detail": "Starts Vite React client on port 3000",
+      "isBackground": true
+    },
+    {
+      "type": "shell",
+      "command": "cd server && npx prisma db push",
+      "problemMatcher": [],
+      "label": "prisma: push (Sync schema with DB)",
+      "detail": "Syncs schema.prisma to your PostgreSQL database"
+    },
+    {
+      "type": "shell",
+      "command": "cd server && npm run db:seed",
+      "problemMatcher": [],
+      "label": "prisma: seed (Seed demo data)",
+      "detail": "Populates demo accounts, boards, cards, and activity logs"
+    },
+    {
+      "type": "shell",
+      "command": "cd server && npx prisma studio",
+      "problemMatcher": [],
+      "label": "prisma: studio (Visual database GUI)",
+      "detail": "Opens visual database browser at http://localhost:5555"
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "path": "server",
+      "problemMatcher": [],
+      "label": "test: run tests (Vitest)",
+      "detail": "Runs unit and integration tests (fractional index & RBAC)",
+      "group": "test"
+    }
+  ]
+}

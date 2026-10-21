@@ -1,0 +1,15 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  }
+}
