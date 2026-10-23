@@ -5,6 +5,7 @@ import { Card, List } from '../types/index.js';
 import { CardItem } from './CardItem.js';
 import { Plus, MoreHorizontal, Trash2, Edit2, Check, X } from 'lucide-react';
 import { useBoard } from '../context/BoardContext.js';
+import { useClickOutside } from '../hooks/useClickOutside.js';
 
 interface KanbanColumnProps {
   list: List;
@@ -23,6 +24,9 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState(list.title);
   const [showMenu, setShowMenu] = useState(false);
+
+  // Close the ⋯ menu when clicking anywhere outside it
+  const menuRef = useClickOutside<HTMLDivElement>(() => setShowMenu(false), showMenu);
 
   const { setNodeRef, isOver } = useDroppable({
     id: list.id,
@@ -108,7 +112,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
                 <Plus className="w-4 h-4" />
               </button>
 
-              <div className="relative">
+              <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setShowMenu((prev) => !prev)}
                   className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 rounded transition"

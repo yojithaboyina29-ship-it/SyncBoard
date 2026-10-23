@@ -18,10 +18,11 @@ export function requireWorkspaceRole(minRole: Role = Role.VIEWER) {
 
       let workspaceId = req.params.workspaceId || req.body?.workspaceId || (req.query?.workspaceId as string);
 
-      // If workspaceId is not direct, check if boardId is provided
-      if (!workspaceId && req.params.boardId) {
+      // Resolve boardId from params OR body (e.g. POST /lists sends boardId in body)
+      const boardId = req.params.boardId || req.body?.boardId;
+      if (!workspaceId && boardId) {
         const board = await prisma.board.findUnique({
-          where: { id: req.params.boardId },
+          where: { id: boardId },
           select: { workspaceId: true },
         });
         if (board) {
@@ -29,10 +30,11 @@ export function requireWorkspaceRole(minRole: Role = Role.VIEWER) {
         }
       }
 
-      // If listId is provided
-      if (!workspaceId && req.params.listId) {
+      // Resolve listId from params OR body (e.g. POST /cards sends listId in body)
+      const listId = req.params.listId || req.body?.listId;
+      if (!workspaceId && listId) {
         const list = await prisma.list.findUnique({
-          where: { id: req.params.listId },
+          where: { id: listId },
           select: { board: { select: { workspaceId: true } } },
         });
         if (list) {
@@ -40,10 +42,11 @@ export function requireWorkspaceRole(minRole: Role = Role.VIEWER) {
         }
       }
 
-      // If cardId is provided
-      if (!workspaceId && req.params.cardId) {
+      // Resolve cardId from params OR body
+      const cardId = req.params.cardId || req.body?.cardId;
+      if (!workspaceId && cardId) {
         const card = await prisma.card.findUnique({
-          where: { id: req.params.cardId },
+          where: { id: cardId },
           select: { list: { select: { board: { select: { workspaceId: true } } } } },
         });
         if (card) {

@@ -17,6 +17,7 @@ import {
 import { useAuth } from '../context/AuthContext.js';
 import { useBoard } from '../context/BoardContext.js';
 import { Priority } from '../types/index.js';
+import { useClickOutside } from '../hooks/useClickOutside.js';
 
 interface NavbarProps {
   onOpenCreateBoard: () => void;
@@ -55,6 +56,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [showWorkspaceMenu, setShowWorkspaceMenu] = useState(false);
   const [showBoardMenu, setShowBoardMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+
+  // Close dropdowns when clicking outside them
+  const workspaceMenuRef = useClickOutside<HTMLDivElement>(() => setShowWorkspaceMenu(false), showWorkspaceMenu);
+  const boardMenuRef = useClickOutside<HTMLDivElement>(() => setShowBoardMenu(false), showBoardMenu);
+  const userMenuRef = useClickOutside<HTMLDivElement>(() => setShowUserMenu(false), showUserMenu);
 
   const toggleDarkMode = () => {
     if (document.documentElement.classList.contains('dark')) {
@@ -99,7 +105,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="h-5 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block" />
 
           {/* Workspace Switcher */}
-          <div className="relative">
+          <div className="relative" ref={workspaceMenuRef}>
             <button
               onClick={() => setShowWorkspaceMenu((prev) => !prev)}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
@@ -151,7 +157,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Board Selector */}
           {currentWorkspace?.boards && currentWorkspace.boards.length > 0 && (
-            <div className="relative">
+            <div className="relative" ref={boardMenuRef}>
               <button
                 onClick={() => setShowBoardMenu((prev) => !prev)}
                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
@@ -360,7 +366,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
 
           {/* User Profile Menu */}
-          <div className="relative">
+          <div className="relative" ref={userMenuRef}>
             <button
               onClick={() => setShowUserMenu((prev) => !prev)}
               className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-indigo-500/20 transition"

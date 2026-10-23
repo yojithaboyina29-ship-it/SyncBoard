@@ -16,6 +16,7 @@ import { KanbanColumn } from './KanbanColumn.js';
 import { CardItem } from './CardItem.js';
 import { Card } from '../types/index.js';
 import { Plus, X } from 'lucide-react';
+import { useClickOutside } from '../hooks/useClickOutside.js';
 
 interface BoardViewProps {
   onOpenCreateCard: (listId: string) => void;
@@ -42,6 +43,15 @@ export const BoardView: React.FC<BoardViewProps> = ({
   const [activeCard, setActiveCard] = useState<Card | null>(null);
   const [isAddingList, setIsAddingList] = useState(false);
   const [newListTitle, setNewListTitle] = useState('');
+
+  // Close "Add List" form when clicking outside it
+  const addListRef = useClickOutside<HTMLDivElement>(
+    () => {
+      setIsAddingList(false);
+      setNewListTitle('');
+    },
+    isAddingList
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -188,7 +198,7 @@ export const BoardView: React.FC<BoardViewProps> = ({
 
           {/* Add Column Button / Form */}
           {userRole !== 'VIEWER' && (
-            <div className="w-72 sm:w-80 shrink-0">
+            <div className="w-72 sm:w-80 shrink-0" ref={addListRef}>
               {isAddingList ? (
                 <form
                   onSubmit={handleCreateList}
