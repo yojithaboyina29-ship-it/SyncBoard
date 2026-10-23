@@ -2,15 +2,11 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { ENV } from './config/env.js';
 import apiRouter from './routes/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { initSocketIO } from './sockets/socketHandler.js';
 import prisma from './config/prisma.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
@@ -42,7 +38,7 @@ app.get('/api/health', async (_req, res) => {
 app.use('/api', apiRouter);
 
 // Serve client in production
-const clientDistPath = path.resolve(__dirname, '../../client/dist');
+const clientDistPath = path.resolve(process.cwd(), '../client/dist');
 app.use(express.static(clientDistPath));
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {

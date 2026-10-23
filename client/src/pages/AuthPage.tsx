@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.js';
-import { LayoutDashboard, Zap, ShieldCheck, RefreshCw, ArrowRight } from 'lucide-react';
+import { LayoutDashboard, Zap, ShieldCheck, RefreshCw, ArrowRight, Check } from 'lucide-react';
 
 export const AuthPage: React.FC = () => {
   const { login, register } = useAuth();
@@ -11,9 +11,24 @@ export const AuthPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const hasMinLength = password.length >= 8;
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[^A-Za-z0-9]/.test(password);
+  const isPasswordValid = hasMinLength && hasUpper && hasLower && hasNumber && hasSpecial;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!isLogin && !isPasswordValid) {
+      setError(
+        'Password denied: Password must contain at least 8 characters, one capital letter (A-Z), one small letter (a-z), one number (0-9), and one special character (e.g. !@#$%^&*).'
+      );
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -126,6 +141,56 @@ export const AuthPage: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 text-slate-900 dark:text-slate-100"
               />
+
+              {!isLogin && (
+                <div className="mt-2.5 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1 text-[11px]">
+                  <p className="font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                    Password Requirements:
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[10px]">
+                    <span
+                      className={`flex items-center gap-1.5 ${
+                        hasMinLength ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-slate-400'
+                      }`}
+                    >
+                      {hasMinLength ? <Check className="w-3 h-3 shrink-0" /> : <span className="w-3 h-3 inline-block rounded-full border border-slate-300 dark:border-slate-600" />}
+                      8+ Characters
+                    </span>
+                    <span
+                      className={`flex items-center gap-1.5 ${
+                        hasUpper ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-slate-400'
+                      }`}
+                    >
+                      {hasUpper ? <Check className="w-3 h-3 shrink-0" /> : <span className="w-3 h-3 inline-block rounded-full border border-slate-300 dark:border-slate-600" />}
+                      1 Capital Letter (A-Z)
+                    </span>
+                    <span
+                      className={`flex items-center gap-1.5 ${
+                        hasLower ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-slate-400'
+                      }`}
+                    >
+                      {hasLower ? <Check className="w-3 h-3 shrink-0" /> : <span className="w-3 h-3 inline-block rounded-full border border-slate-300 dark:border-slate-600" />}
+                      1 Small Letter (a-z)
+                    </span>
+                    <span
+                      className={`flex items-center gap-1.5 ${
+                        hasNumber ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-slate-400'
+                      }`}
+                    >
+                      {hasNumber ? <Check className="w-3 h-3 shrink-0" /> : <span className="w-3 h-3 inline-block rounded-full border border-slate-300 dark:border-slate-600" />}
+                      1 Number (0-9)
+                    </span>
+                    <span
+                      className={`flex items-center gap-1.5 sm:col-span-2 ${
+                        hasSpecial ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-slate-400'
+                      }`}
+                    >
+                      {hasSpecial ? <Check className="w-3 h-3 shrink-0" /> : <span className="w-3 h-3 inline-block rounded-full border border-slate-300 dark:border-slate-600" />}
+                      1 Special Character (!@#$%^&*)
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             <button
